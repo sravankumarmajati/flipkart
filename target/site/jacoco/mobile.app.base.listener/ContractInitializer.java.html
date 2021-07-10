@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ContractInitializer.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">flipkart</a> &gt; <a href="index.source.html" class="el_package">mobile.app.base.listener</a> &gt; <span class="el_source">ContractInitializer.java</span></div><h1>ContractInitializer.java</h1><pre class="source lang-java linenums">package mobile.app.base.listener;
+
+import mobile.app.repository.ContractRepository;
+import cn.hyperchain.sdk.crypto.ECPriv;
+import cn.hyperchain.sdk.rpc.HyperchainAPI;
+import cn.hyperchain.sdk.rpc.Transaction.Transaction;
+import cn.hyperchain.sdk.rpc.base.VMType;
+import cn.hyperchain.sdk.rpc.utils.Utils;
+
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+<span class="nc" id="L15">public class ContractInitializer {</span>
+
+<span class="nc" id="L17">    Logger logger = Logger.getLogger(ContractInitializer.class);</span>
+
+
+    @Autowired
+    ContractRepository contractRepository;
+
+    public void init(){
+        try {
+<span class="nc" id="L25">            logger.info(contractRepository.queryContractName());</span>
+<span class="nc" id="L26">            logger.info(contractRepository.queryContractName());</span>
+<span class="nc" id="L27">            logger.info(contractRepository.queryAccountJson(&quot;&quot;));</span>
+<span class="nc" id="L28">            logger.info(contractRepository.queryAccountJsonPwd(&quot;&quot;));</span>
+
+<span class="nc" id="L30">            String payload = Utils.encodeDeployJar(&quot;contract/&quot; + contractRepository.queryContractJarName());</span>
+<span class="nc" id="L31">            ECPriv priv = HyperchainAPI.decryptAccount(contractRepository.queryAccountJson(&quot;&quot;),contractRepository.queryAccountJsonPwd(&quot;&quot;));</span>
+<span class="nc" id="L32">            Transaction deployTx = new Transaction(priv.address(),payload,false, VMType.HVM);</span>
+<span class="nc" id="L33">            deployTx.sign(priv);</span>
+<span class="nc" id="L34">            String address = contractRepository.deploy(deployTx, contractRepository.queryContractName(), true);</span>
+<span class="nc" id="L35">            logger.info(&quot;contract address is &quot; +  address);</span>
+<span class="nc" id="L36">           } catch (Exception e) {// TODO specific exception type</span>
+<span class="nc" id="L37">            e.printStackTrace();</span>
+<span class="nc" id="L38">        }</span>
+
+<span class="nc" id="L40">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.5.201505241946</span></div></body></html>
